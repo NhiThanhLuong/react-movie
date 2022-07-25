@@ -1,67 +1,53 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import { useSelector, useDispatch } from 'react-redux';
 
-import tmdbApi, { category as cate, movieType, tvType } from '@/api/tmdbApi';
+import { category as cate, movieType, tvType } from '@/api/tmdbApi';
 import { OutlineButton } from '@/components/button/Button';
 import MovieCard from '@/components/movie-card';
 import MovieSearch from '@/components//movie-search';
 import './styles.scss';
+import {
+  fetchMovieItem,
+  fetchTvItem,
+  fetchSearch,
+  fetchLoadMoreMovieItem,
+  fetchLoadMoreTvItem,
+  fetchLoadMoreSearch,
+} from '@/redux/itemSlice';
 
 const MovieGrid = ({ category }) => {
-  const [items, setItems] = useState([]);
-
-  const [page, setPage] = useState(1);
-  const [totalPage, setTotalPage] = useState(0);
-
+  const dispatch = useDispatch();
   const { keyword } = useParams();
 
+  const { items, page, total_pages, loading } = useSelector((state) => state.item);
+
   useEffect(() => {
-    const getList = async () => {
-      let response = null;
-      if (keyword) {
-        const params = {
-          query: keyword,
-        };
-        response = await tmdbApi.search(category, { params });
-      } else {
-        const params = {};
-        switch (category) {
-          case cate.movie:
-            response = await tmdbApi.getMoviesList(movieType.upcoming, { params });
-            break;
-          default:
-            response = await tmdbApi.getTvList(tvType.popular, { params });
-        }
-      }
-      setItems(response.results);
-      setTotalPage(response.total_pages);
-    };
-    getList();
+    if (keyword) {
+      dispatch(fetchSearch([category, { params: { query: keyword } }]));
+    } else {
+      category === cate.movie
+        ? dispatch(fetchMovieItem([movieType.upcoming, { params: {} }]))
+        : dispatch(fetchTvItem([tvType.popular, { params: {} }]));
+    }
   }, [category, keyword, useParams()]);
 
-  const handleLoadMore = async () => {
-    let response = null;
+  const handleLoadMore = () => {
     if (keyword) {
       const params = {
         page: page + 1,
         query: keyword,
       };
-      response = await tmdbApi.search(category, { params });
+      dispatch(fetchLoadMoreSearch([category, { params }]));
     } else {
       const params = {
         page: page + 1,
       };
-      switch (category) {
-        case cate.movie:
-          response = await tmdbApi.getMoviesList(movieType.upcoming, { params });
-          break;
-        default:
-          response = await tmdbApi.getTvList(tvType.popular, { params });
-      }
+      category === cate.movie
+        ? dispatch(fetchLoadMoreMovieItem([movieType.upcoming, { params }]))
+        : dispatch(fetchLoadMoreTvItem([tvType.popular, { params }]));
     }
-    setItems([...items, ...response.results]);
-    setPage(page + 1);
   };
 
   return (
@@ -70,11 +56,10 @@ const MovieGrid = ({ category }) => {
         <MovieSearch category={category} keyword={keyword} />
       </div>
       <div className="movie-grid">
-        {items.map((item, i) => (
-          <MovieCard category={category} item={item} key={i} />
-        ))}
+        {loading === false &&
+          items.map((item, i) => <MovieCard category={category} item={item} key={i} />)}
       </div>
-      {page < totalPage ? (
+      {page < total_pages ? (
         <div className="movie-grid__loadmore">
           <OutlineButton className="small" onClick={handleLoadMore}>
             Load more

@@ -1,23 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
 
-import tmdbApi from '@/api/tmdbApi';
 import apiConfig from '@/api/apiConfig';
 import CastList from '@/components/cast-list';
 import VideoList from '@/components/video-list';
 import MovieList from '@/components/movie-list';
 import './styles.scss';
+import { fetchSimilar, fetchDetail } from '@/redux/itemSlice';
 
 const Detail = () => {
+  const dispatch = useDispatch();
+  const { items, item, loading } = useSelector((state) => state.item);
+
   const { category, id } = useParams();
-  const [item, setItem] = useState(null);
+
   useEffect(() => {
-    const getDetail = async () => {
-      const response = await tmdbApi.detail(category, id, { params: {} });
-      setItem(response);
-      window.scrollTo(0, 0);
-    };
-    getDetail();
+    dispatch(fetchDetail([category, id, { params: {} }]));
+    dispatch(fetchSimilar([category, id]));
+    window.scrollTo(0, 0);
   }, [category, id]);
 
   return (
@@ -70,7 +71,7 @@ const Detail = () => {
               <div className="section__header mb-2">
                 <h2>Similar</h2>
               </div>
-              <MovieList category={category} type="similar" id={item.id} />
+              {loading === false && <MovieList items={items} category={category} />}
             </div>
           </div>
         </>
