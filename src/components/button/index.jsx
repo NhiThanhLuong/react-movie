@@ -1,13 +1,17 @@
 /* eslint-disable react/prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames/bind';
 
-import './button.scss';
+// import './styles.scss';
+import styles from './styles.module.scss';
+
+const cx = classNames.bind(styles);
 
 const Button = (props) => {
   return (
     <button
-      className={`btn ${props.className}`}
+      className={cx('btn', props.className)}
       onClick={props.onClick ? () => props.onClick() : null}
     >
       {props.children}
@@ -18,7 +22,7 @@ const Button = (props) => {
 export const OutlineButton = (props) => {
   return (
     <Button
-      className={`btn-outline ${props.className}`}
+      className={cx('btn-outline', props.className)}
       onClick={props.onClick ? () => props.onClick() : null}
     >
       {props.children}

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import apiConfig from '@/api/apiConfig';
 import { category as cate } from '@/api/tmdbApi';
-import Button from '@/components/button/Button';
+import Button from '@/components/button';
 import './styles.scss';
 
 const MovieCard = ({ item, category }) => {
@@ -15,7 +15,7 @@ const MovieCard = ({ item, category }) => {
     <Link to={link}>
       <div className="movie-card" style={{ backgroundImage: `url(${bg})` }}>
         <Button>
-          <i className="bx bx-play"></i>
+          <i className="bx bx-play" />
         </Button>
       </div>
       <h3>{item.title || item.name}</h3>

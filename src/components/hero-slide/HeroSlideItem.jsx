@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import apiConfig from '@/api/apiConfig';
 import tmdbApi, { category } from '@/api/tmdbApi';
 
-import Button, { OutlineButton } from '@/components/button/Button';
+import Button, { OutlineButton } from '@/components/button';
 
 const HeroSlideItem = ({ item, className }) => {
   const history = useHistory();

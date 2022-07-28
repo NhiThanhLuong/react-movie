@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 
 import { category } from '@/api/tmdbApi';
 import Input from '@/components/input';
-import Button from '@/components/button/Button';
+import Button from '@/components/button';
 import './styles.scss';
 
 const MovieSearch = (props) => {

@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { category as cate, movieType, tvType } from '@/api/tmdbApi';
-import { OutlineButton } from '@/components/button/Button';
+import { OutlineButton } from '@/components/button';
 import MovieCard from '@/components/movie-card';
 import MovieSearch from '@/components//movie-search';
 import './styles.scss';

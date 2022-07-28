@@ -1,15 +1,17 @@
 import React, { useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
 import apiConfig from '@/api/apiConfig';
 import CastList from '@/components/cast-list';
 import VideoList from '@/components/video-list';
 import MovieList from '@/components/movie-list';
+import Button from '@/components/button';
 import './styles.scss';
 import { fetchSimilar, fetchDetail } from '@/redux/itemSlice';
 
 const Detail = () => {
+  const history = useHistory();
   const dispatch = useDispatch();
   const { items, item, loading } = useSelector((state) => state.item);
 
@@ -61,6 +63,7 @@ const Detail = () => {
                 </div>
                 <CastList id={item.id} />
               </div>
+              <Button onClick={() => history.push(`/movie/${item.id}/watch`)}>Watch now</Button>
             </div>
           </div>
           <div className="container">

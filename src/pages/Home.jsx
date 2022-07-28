@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { OutlineButton } from '@/components/button/Button';
+import { OutlineButton } from '@/components/button';
 import { useSelector, useDispatch } from 'react-redux';
 
 import HeroSlide from '@/components/hero-slide/HeroSlide';
